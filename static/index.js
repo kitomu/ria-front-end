@@ -1,13 +1,19 @@
+
 window.onload = function (){
+
     document.querySelector('.left').innerHTML = '';
+    document.querySelector('.right').innerHTML = '';
+
     getData(function (err , data) {
         if(err) throw new Error(`Ошибка при обработке данных: ${err.message}`);
-    
+        
         for (let item in data){
-           createItem(data[item].author ,data[item].name , data[item].img);
+           createItem(data[item].author ,data[item].name , data[item].img , item);
         }
-    })
+    });
+
 }
+
 
 function getData(colback){
     fetch('./static/data.json')
@@ -17,8 +23,8 @@ function getData(colback){
     
     return;
 }
-function createItem( author,name,imageURL){
-
+function createItem( author , name , imageURL , bookId){
+    console.log(bookId);
     let item = document.createElement('div');
         item.className = 'item';
 
@@ -64,20 +70,44 @@ function createItem( author,name,imageURL){
         return title;
     }
 
-    function createAfter(){
-        let after = document.createElement('div');
+    function createButton(){
+        let button = document.createElement('div');
 
-        after.className = 'after';
+        button.className = (localStorage.getItem(bookId))?'before':'after';
         
-        return after;
+        button.addEventListener('click', function(){
+            
+            //Переключаем класы для отображения кнопки
+            this.classList.toggle('after');
+            this.classList.toggle('before');
+
+            
+            switch(this.className){
+                case "before":
+                    document.querySelector('.right').appendChild(this.parentNode);
+                    localStorage.setItem(bookId , true)
+                    break;
+                case "after":
+                    document.querySelector('.left').appendChild(this.parentNode);
+                    localStorage.removeItem(bookId);
+                    break;
+                default:
+                    break;
+            }
+
+        })
+
+        return button;
     }
     
     //Собираем item
     item.appendChild(createImage());
     item.appendChild(createTitle());
-    item.appendChild(createAfter());
+    item.appendChild(createButton());
 
-    document.querySelector('.left').appendChild(item);
+    document.querySelector(
+        (localStorage.getItem(bookId))?'.right':'.left'
+                            ).appendChild(item);
     return;
 }
 
