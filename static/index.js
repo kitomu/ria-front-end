@@ -138,12 +138,20 @@ function createItem( author , name , imageURL , bookId){
                     
                     //Добавляем в стор id нужной книги для сохранения в правой колонке
                     localStorage.setItem(bookId , true)
+
+                    // динамический подсчет
+                    document.querySelector('.left-counter').innerHTML = `В левой колонке: ${document.querySelector('.left').childNodes.length}`
+                    document.querySelector('.right-counter').innerHTML = `В правой колонке: ${document.querySelector('.right').childNodes.length}`
                     break;
                 case "after":
                     document.querySelector('.left').appendChild(this.parentNode);
 
                     //Удаляем из стора для отображения в левой колонке
                     localStorage.removeItem(bookId);
+
+                    //динамический подсчет
+                    document.querySelector('.left-counter').innerHTML = `В левой колонке: ${document.querySelector('.left').childNodes.length}`
+                    document.querySelector('.right-counter').innerHTML = `В правой колонке: ${document.querySelector('.right').childNodes.length}`
                     break;
                 default:
                     //По дефолту кидаем в правую колонку
