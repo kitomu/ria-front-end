@@ -7,7 +7,7 @@ window.onload = function (){
 
     input.value = '';
     
-    //Очищаем рабочие зоны т.к. трогать html нельзя, а избавится от верстки нужно 
+    //Очищаем рабочие зоны
     leftBar.innerHTML = '';
     rightBar.innerHTML = '';
 
@@ -20,12 +20,15 @@ window.onload = function (){
         for (let item in data){
            createItem(data[item].author ,data[item].name , data[item].img , item);
         }
-        console.log(`В левой колонке: ${leftBar.childNodes.length}, В правой колонке: ${rightBar.childNodes.length}`)
+
+        // Сумирование итемов в колонке
+        document.querySelector('.left-counter').innerHTML = `В левой колонке: ${leftBar.childNodes.length}`
+        document.querySelector('.right-counter').innerHTML = `В правой колонке: ${rightBar.childNodes.length}`
     });
 
     //"Гениальный" поиск с колбэк хэлом
     var timer;    
-    document.querySelector('input').addEventListener('keydown' , function(){
+    input.addEventListener('keydown' , function(){
         //Избавляемся от многократных запросов при нажатии клавиши
         clearTimeout(timer);
 
@@ -45,18 +48,20 @@ window.onload = function (){
                     if(data[item].author.toLowerCase().match(this.value.toLowerCase()))
                             createItem(data[item].author ,data[item].name , data[item].img , item);
                 }
-                console.log(`В левой колонке: ${leftBar.childNodes.length}, В правой колонке: ${rightBar.childNodes.length}`);
+                // Сумирование итемов в колонке
+                document.querySelector('.left-counter').innerHTML = `В левой колонке: ${leftBar.childNodes.length}`
+                document.querySelector('.right-counter').innerHTML = `В правой колонке: ${rightBar.childNodes.length}`
             });
         },500);
     })
 }
 
 //Функция забора данных, колбэк принимает первым аргументом ошибку, а вторым данные
-function getData(colback){
+function getData(callback){
     fetch('./static/data.json')
     .then(dataJSON => dataJSON.json())
-    .then(data => {colback(null , data)})
-    .catch(err => {colback(err)});
+    .then(data => {callback(null , data)})
+    .catch(err => {callback(err)});
     
     return;
 }
@@ -136,6 +141,7 @@ function createItem( author , name , imageURL , bookId){
                     break;
                 case "after":
                     document.querySelector('.left').appendChild(this.parentNode);
+
                     //Удаляем из стора для отображения в левой колонке
                     localStorage.removeItem(bookId);
                     break;
@@ -163,5 +169,3 @@ function createItem( author , name , imageURL , bookId){
     
     return;
 }
-
-

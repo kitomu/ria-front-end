@@ -78,3 +78,18 @@ div {
 .hide {
 	display: none;
 }
+
+.counter{
+	min-width:940px;
+	background:#eee;
+	display:flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.left-counter{
+	min-width:450px;
+}
+.right-counter{
+	min-width:450px;
+}
